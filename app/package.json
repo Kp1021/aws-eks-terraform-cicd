@@ -1,0 +1,12 @@
+{
+  "name": "eks-node-app",
+  "version": "1.0.0",
+  "description": "Sample Node.js application for AWS EKS CI/CD pipeline demonstration.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
