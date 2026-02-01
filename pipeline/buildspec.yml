@@ -1,0 +1,28 @@
+version: 0.2
+
+# This buildspec demonstrates how to build a Node.js application and containerise
+# it for deployment to AWS ECR. You may need to customise environment
+# variables (e.g., repository URI) in the CodeBuild console.
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing dependencies..."
+      - cd app
+      - npm install --production
+      - cd ..
+  build:
+    commands:
+      - echo "Building Docker image..."
+      # ECR_REPO_URI should be set as an environment variable in CodeBuild
+      - docker build -t $ECR_REPO_URI:latest ./app
+  post_build:
+    commands:
+      - echo "Pushing image to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
+      - docker push $ECR_REPO_URI:latest
+      - echo "Build completed on $(date)"
+artifacts:
+  files:
+    - '**/*'
